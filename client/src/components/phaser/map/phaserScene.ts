@@ -103,7 +103,10 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             0,
         )!;
         map.createLayer("furniture", [tileBase, tileIndoor, tileUrban], 0, 0);
+        const layerChairBack = map.createLayer("chair-back", [tileBase, tileIndoor], 0, 0);
         map.createLayer("top-decorations", [tileBase, tileUrban], 0, 0);
+
+        layerChairBack.setDepth(2);
 
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
