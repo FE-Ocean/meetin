@@ -152,22 +152,15 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             const spriteKey = `player${i}`;
 
             this.anims.create({
-                key: `walk-right-${i}`,
-                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [3, 7, 11] }),
-                frameRate: 10,
-                repeat: -1,
-            });
-
-            this.anims.create({
-                key: `walk-down-${i}`,
-                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [1, 5, 9] }),
-                frameRate: 10,
-                repeat: -1,
-            });
-
-            this.anims.create({
                 key: `walk-left-${i}`,
                 frames: this.anims.generateFrameNumbers(spriteKey, { frames: [0, 4, 8] }),
+                frameRate: 10,
+                repeat: -1,
+            });
+
+            this.anims.create({
+                key: `walk-right-${i}`,
+                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [3, 7, 11] }),
                 frameRate: 10,
                 repeat: -1,
             });
@@ -180,7 +173,32 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             });
 
             this.anims.create({
-                key: `player_idle_${i}`,
+                key: `walk-down-${i}`,
+                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [1, 5, 9] }),
+                frameRate: 10,
+                repeat: -1,
+            });
+
+            this.anims.create({
+                key: `idle-left-${i}`,
+                frames: [{ key: spriteKey, frame: 0 }],
+                frameRate: 1,
+            });
+
+            this.anims.create({
+                key: `idle-right-${i}`,
+                frames: [{ key: spriteKey, frame: 3 }],
+                frameRate: 1,
+            });
+
+            this.anims.create({
+                key: `idle-up-${i}`,
+                frames: [{ key: spriteKey, frame: 2 }],
+                frameRate: 1,
+            });
+
+            this.anims.create({
+                key: `idle-down-${i}`,
                 frames: [{ key: spriteKey, frame: 1 }],
                 frameRate: 1,
             });
@@ -235,8 +253,11 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             }
             player.setVelocityY(PLAYER_SPEED * 16);
         } else {
-            if (player.anims.isPlaying) {
-                player.play(`player_idle_${this.myCharacterId}`);
+            const currentAnim = this.player.anims.currentAnim?.key.slice(5);
+            const newAnim = `idle-${currentAnim}`;
+
+            if (!this.player.anims.isPlaying || this.player.anims.currentAnim?.key !== newAnim) {
+                this.player.play(newAnim);
             }
         }
     }
