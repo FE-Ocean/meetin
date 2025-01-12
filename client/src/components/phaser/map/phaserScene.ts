@@ -291,12 +291,12 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         this.otherPlayers.getChildren().forEach((otherPlayer) => {
             const player = otherPlayer as OtherPlayerType;
             player.nameTag.x = player.x + player.width / 2;
-            player.nameTag.y = player.y - 15;
+            player.nameTag.y = player.y - 5;
         });
 
         if (this.player && this.player.nameTag) {
             this.player.nameTag.x = this.player.x + this.player.width / 2;
-            this.player.nameTag.y = this.player.y - 15;
+            this.player.nameTag.y = this.player.y - 5;
         }
     }
 
@@ -377,10 +377,12 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         ) as OtherPlayerType;
 
         otherPlayer.setCollideWorldBounds(true);
+        otherPlayer.setOrigin(0, 0);
         otherPlayer.playerId = playerInfo.playerId;
+        otherPlayer.characterId = playerInfo.characterId;
         otherPlayer.nameTag = this.createNameTag(
             playerInfo.x + otherPlayer.width / 2,
-            playerInfo.y - 15,
+            playerInfo.y - 5,
             playerInfo.user.userName,
         );
         this.otherPlayers.add(otherPlayer);
@@ -395,7 +397,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
                 padding: { x: 2, y: 2 },
                 resolution: 2,
             })
-            .setOrigin(0.5);
+            .setOrigin(0.5, 1);
 
         nameTag.setBackgroundColor("#000000");
         nameTag.alpha = 0.6;
