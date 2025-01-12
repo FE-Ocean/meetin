@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CookieOptions, Response } from "express";
 import { AuthGuard } from "@nestjs/passport";
@@ -18,7 +18,7 @@ export class AuthController {
 
         this.cookieOptions = {
             maxAge: 30 * 24 * 60 * 60 * 1000,
-            secure: true,
+            secure: isPROD,
             ...(isPROD && {
                 sameSite: "none",
                 domain: `.${process.env.CLIENT_URL.replace("https://", "")}`,
@@ -56,5 +56,15 @@ export class AuthController {
     async login(@Req() req: LoginRequest, @Res() res: Response) {
         const user = this.userService.entityToDto(req.user);
         res.json(user);
+    }
+
+    @Post("/logout")
+    logout(@Req() req, @Res() res: Response) {
+        res.clearCookie("access_token", {
+            ...this.cookieOptions,
+            expires: new Date(0),
+            maxAge: 0
+        })
+        return res.status(200).send('Successfully Logoutted')
     }
 }

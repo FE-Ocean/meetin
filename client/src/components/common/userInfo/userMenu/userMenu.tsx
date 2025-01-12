@@ -2,6 +2,7 @@ import Image from "next/image";
 import UserMenuItem from "../userMenuItem/userMenuItem";
 import style from "./userMenu.module.scss";
 import { useRouter } from "next/navigation";
+import { useLogout } from "@/apis/service/user.service";
 
 interface IUserMenu {
     className?: string;
@@ -9,19 +10,13 @@ interface IUserMenu {
 
 const UserMenu = (props: IUserMenu) => {
     const router = useRouter();
+    const { mutate } = useLogout();
     const logout = () => {
-        document.cookie = document.cookie
-            .split("; ")
-            .map((cookie) => {
-                if (cookie.includes("access_token=")) {
-                    return cookie + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-                } else {
-                    return cookie;
-                }
-            })
-            .join("; ");
-
-        router.push("/");
+        mutate(undefined, {
+            onSettled: () => {
+                router.push("/"); 
+            }
+        });
     };
 
     const USER_MENU = [
