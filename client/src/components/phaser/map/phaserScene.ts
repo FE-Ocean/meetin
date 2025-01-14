@@ -107,7 +107,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         const layerChairBack = map.createLayer("chair-back", [tileBase, tileIndoor], 0, 0);
         map.createLayer("top-decorations", [tileBase, tileUrban], 0, 0);
 
-        layerChairBack.setDepth(2);
+        layerChairBack!.setDepth(2);
 
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -370,6 +370,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
 
         const player = this.physics.add.sprite(playerInfo.x, playerInfo.y, spriteKey) as PlayerType;
         player.setCollideWorldBounds(true);
+        player.anims.play(`idle-down-${this.myCharacterId}`);
         player.setOrigin(0, 0);
         player.setSize(16, 16);
 
@@ -402,6 +403,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         ) as OtherPlayerType;
 
         otherPlayer.setCollideWorldBounds(true);
+        otherPlayer.anims.play(`idle-down-${playerInfo.characterId}`);
         otherPlayer.playerId = playerInfo.playerId;
         otherPlayer.nameTag = this.createNameTag(
             playerInfo.x + otherPlayer.width / 2,
