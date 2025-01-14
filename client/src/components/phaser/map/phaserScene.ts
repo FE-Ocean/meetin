@@ -404,6 +404,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
 
         otherPlayer.setCollideWorldBounds(true);
         otherPlayer.anims.play(`idle-down-${playerInfo.characterId}`);
+        otherPlayer.setOrigin(0, 0);
         otherPlayer.playerId = playerInfo.playerId;
         otherPlayer.nameTag = this.createNameTag(
             playerInfo.x + otherPlayer.width / 2,
