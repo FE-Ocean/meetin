@@ -23,6 +23,7 @@ interface MoveInfo {
     x: number;
     y: number;
     playerId: string;
+    characterId: string;
     direction: Direction;
 }
 
@@ -334,19 +335,19 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         });
     }
 
-    private stopOtherPlayer(info: { playerId: string }): void {
+    private stopOtherPlayer(info: MoveInfo): void {
         if (!this.otherPlayers) return;
 
         (this.otherPlayers.getChildren() as OtherPlayerType[]).forEach((otherPlayer) => {
             if (info.playerId === otherPlayer.playerId) {
-                this.animateOtherPlayerStop(otherPlayer);
+                this.animateOtherPlayerStop(otherPlayer, info);
             }
         });
     }
 
     private animateOtherPlayerMovement(otherPlayer: OtherPlayerType, info: MoveInfo): void {
         const direction = info.direction;
-        const animationKey = `walk-${direction}-${otherPlayer.characterId}`;
+        const animationKey = `walk-${direction}-${info.characterId}`;
 
         if (!otherPlayer.anims.isPlaying || otherPlayer.anims.currentAnim?.key !== animationKey) {
             otherPlayer.play(animationKey);
@@ -356,9 +357,9 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         otherPlayer.setPosition(info.x, info.y);
     }
 
-    private animateOtherPlayerStop(otherPlayer: OtherPlayerType): void {
+    private animateOtherPlayerStop(otherPlayer: OtherPlayerType, info: MoveInfo): void {
         if (otherPlayer.moving) {
-            otherPlayer.play(`player_idle_${otherPlayer.characterId}`);
+            otherPlayer.play(`idle-${info.direction}-${info.characterId}`);
         }
         otherPlayer.moving = false;
     }
