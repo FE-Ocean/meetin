@@ -18,7 +18,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 64px;
+        gap: 48px;
         padding: 16px;
     }
 }
@@ -81,6 +81,10 @@
         100% {
             background-position: -200% 50%;
         }
+    }
+
+    @media screen and (max-width: 1000px) {
+        font-size: 36px;
     }
 }
 
