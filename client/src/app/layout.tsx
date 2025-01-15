@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import JotaiProvider from "@/jotai/jotaiProvider";
-import "../styles/reset.css";
-import "../styles/global.scss";
 import ModalProvider from "@/components/modal/modalProvider/modalProvider";
 import { QueryProvider } from "@/query/queryProvider";
 import NewQueryProviders from "@/query/newQueryProvider";
+import Analysis from "./analysis";
+import "../styles/reset.css";
+import "../styles/global.scss";
 
 const noto_Sans_KR = Noto_Sans_KR({ weight: ["400", "700"], subsets: ["latin"] });
 
@@ -21,7 +22,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                 {/* <QueryProvider> */}
                 <NewQueryProviders>
                     <JotaiProvider>
-                        <ModalProvider>{children}</ModalProvider>
+                        <ModalProvider>
+                            {children}
+                            <Analysis />
+                        </ModalProvider>
                     </JotaiProvider>
                 </NewQueryProviders>
                 {/* </QueryProvider> */}
