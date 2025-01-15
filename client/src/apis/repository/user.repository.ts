@@ -7,3 +7,7 @@ export const getUserInfo = async (accessToken?: string) => {
         headers,
     });
 };
+
+export const logout = async () => {
+    return await baseClient.post("/auth/logout");
+};

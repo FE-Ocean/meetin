@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUserInfo } from "../repository/user.repository";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getUserInfo, logout } from "../repository/user.repository";
 import { IUserModel, IUser } from "@/types/user.type";
 import { QUERY_KEY } from "@/constants/queryKey.const";
 
@@ -15,6 +15,14 @@ export const useGetUserInfo = () => {
                 profileImg: userData.profile_img,
                 email: userData.email,
             } as IUser;
+        },
+    });
+};
+
+export const useLogout = () => {
+    return useMutation({
+        mutationFn: async () => {
+            await logout();
         },
     });
 };
