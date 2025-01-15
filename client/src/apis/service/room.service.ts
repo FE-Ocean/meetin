@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     deleteRoom,
     getRoomInfo,
@@ -8,7 +8,6 @@ import {
 } from "../repository/room.repository";
 import { IPatchRoom, IRoomModel } from "@/types/room.type";
 import { QUERY_KEY } from "@/constants/queryKey.const";
-import { queryClient } from "@/query/queryProvider";
 import { IUser } from "@/types/user.type";
 
 interface ICreateRoom {
@@ -51,6 +50,8 @@ export const useGetRoomData = (roomId: string) => {
 };
 
 export const usePatchRoomData = () => {
+    const queryClient = useQueryClient();
+
     const formatRoomData = async ({ roomName, roomId }: IPatchRoom) => {
         const res = (await patchRoom({ roomName, roomId })) as IRoomModel;
         return {
@@ -85,6 +86,8 @@ export const useGetUserRooms = (accessToken?: string) => {
 };
 
 export const useDeleteRoom = (roomId: string) => {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: () => deleteRoom(roomId),
         onSuccess: () => {
