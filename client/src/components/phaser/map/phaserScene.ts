@@ -23,7 +23,6 @@ interface MoveInfo {
     x: number;
     y: number;
     playerId: string;
-    characterId: string;
     direction: Direction;
 }
 
@@ -335,19 +334,19 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         });
     }
 
-    private stopOtherPlayer(info: MoveInfo): void {
+    private stopOtherPlayer(info: { playerId: string }): void {
         if (!this.otherPlayers) return;
 
         (this.otherPlayers.getChildren() as OtherPlayerType[]).forEach((otherPlayer) => {
             if (info.playerId === otherPlayer.playerId) {
-                this.animateOtherPlayerStop(otherPlayer, info);
+                this.animateOtherPlayerStop(otherPlayer);
             }
         });
     }
 
     private animateOtherPlayerMovement(otherPlayer: OtherPlayerType, info: MoveInfo): void {
         const direction = info.direction;
-        const animationKey = `walk-${direction}-${info.characterId}`;
+        const animationKey = `walk-${direction}-${otherPlayer.characterId}`;
 
         if (!otherPlayer.anims.isPlaying || otherPlayer.anims.currentAnim?.key !== animationKey) {
             otherPlayer.play(animationKey);
@@ -357,9 +356,11 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         otherPlayer.setPosition(info.x, info.y);
     }
 
-    private animateOtherPlayerStop(otherPlayer: OtherPlayerType, info: MoveInfo): void {
+    private animateOtherPlayerStop(otherPlayer: OtherPlayerType): void {
+        const stopAnim = otherPlayer.anims.currentAnim?.key.slice(5);
+
         if (otherPlayer.moving) {
-            otherPlayer.play(`idle-${info.direction}-${info.characterId}`);
+            otherPlayer.play(`idle-${stopAnim}`);
         }
         otherPlayer.moving = false;
     }
@@ -406,6 +407,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         otherPlayer.anims.play(`idle-down-${playerInfo.characterId}`);
         otherPlayer.setOrigin(0, 0);
         otherPlayer.playerId = playerInfo.playerId;
+        otherPlayer.characterId = playerInfo.characterId;
         otherPlayer.nameTag = this.createNameTag(
             playerInfo.x + otherPlayer.width / 2,
             playerInfo.y - 15,
