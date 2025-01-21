@@ -8,13 +8,15 @@ import { phaserConfig } from "./phaserConfig";
 import { io } from "socket.io-client";
 import { useGetUserInfo } from "@/apis/service/user.service";
 import { useAtomValue } from "jotai";
-import { isChatFocusedAtom } from "@/jotai/atom";
+import { isChatFocusedAtom, zoomLevelAtom } from "@/jotai/atom";
+import MapZoomButtons from "@/components/button/mapZoom/mapZoomButtons";
 import style from "./map.module.scss";
 
 const Map = () => {
     const { roomId } = useParams();
     const { data: user } = useGetUserInfo();
     const isChatFocused = useAtomValue(isChatFocusedAtom);
+    const zoomLevel = useAtomValue(zoomLevelAtom);
 
     const gameRef = useRef<Phaser.Game | null>(null);
 
@@ -65,7 +67,22 @@ const Map = () => {
         }
     }, [isChatFocused]);
 
-    return <div id="gamediv" className={style.map} onMouseDown={handleMouseDown} />;
+    useEffect(() => {
+        if (gameRef.current) {
+            const scene = gameRef.current.scene.getScene(
+                "MeetsInPhaserScene",
+            ) as MeetsInPhaserScene;
+            if (scene) {
+                scene.setZoomLevel(zoomLevel);
+            }
+        }
+    }, [zoomLevel]);
+
+    return (
+        <div id="gamediv" className={style.map} onMouseDown={handleMouseDown}>
+            <MapZoomButtons />
+        </div>
+    );
 };
 
 export default Map;
