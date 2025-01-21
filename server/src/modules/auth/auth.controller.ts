@@ -65,6 +65,6 @@ export class AuthController {
             expires: new Date(0),
             maxAge: 0
         })
-        return res.status(200).send('Successfully Logoutted')
+        return res.status(200)
     }
 }
