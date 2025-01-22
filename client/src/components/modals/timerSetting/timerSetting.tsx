@@ -39,9 +39,17 @@ const TimerSetting = ({ onClose }: IModal) => {
     ) => {
         targetRef.current!.value = e.target.value.replace(/[^0-9]/g, "").slice(0, 2);
 
-        if (Number(secRef.current.value) > 59) {
-            secRef.current.value = numberToString(+secRef.current.value - 60);
-            minRef.current.value = numberToString(+minRef.current.value + 1);
+        const minute = Number(minRef.current.value);
+        const second = Number(secRef.current.value);
+
+        if (minute === 99 && second > 59) {
+            secRef.current.value = "59";
+        } else if (second > 59) {
+            const remainingSeconds = second % 60;
+            const overflowMinutes = Math.floor(second / 60);
+
+            secRef.current.value = numberToString(remainingSeconds);
+            minRef.current.value = numberToString(minute + overflowMinutes);
         }
     };
 
@@ -80,7 +88,14 @@ const TimerSetting = ({ onClose }: IModal) => {
                     </div>
                 </div>
                 <div className={style.buttons}>
-                    <Button type="button" onClick={onClose} look="ghost" width={90} text="닫기" bold />
+                    <Button
+                        type="button"
+                        onClick={onClose}
+                        look="ghost"
+                        width={90}
+                        text="닫기"
+                        bold
+                    />
                     <Button type="submit" look="solid" width={90} text="시작" bold />
                 </div>
             </form>
