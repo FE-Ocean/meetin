@@ -120,12 +120,10 @@ export class RoomsGateway implements OnGatewayConnection, OnGatewayInit, OnGatew
         const { roomId, duration } = data;
 
         this.server.to(roomId).emit("start_timer", duration);
-        // this.server.in(roomId).emit("start_timer", duration); // 방장 포함
     }
 
     @SubscribeMessage("stop_timer")
     handleStopTimer(@MessageBody() roomId: string) {
         this.server.to(roomId).emit("stop_timer");
-        // this.server.in(roomId).emit("start_timer"); // 방장 포함
     }
 }
