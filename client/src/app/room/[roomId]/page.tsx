@@ -11,7 +11,7 @@ import Skeleton from "@/components/common/skeleton/skeleton";
 import { useParams } from "next/navigation";
 import useChatSocket from "@/app/room/[roomId]/hooks/useChatSocket";
 import { useScreenShare } from "./hooks/useScreenShare";
-import ViewSwitchButton from "@/components/button/viewSwitchButton/viewSwitchButton";
+import ViewSwitchButton from "@/components/buttons/viewSwitch/viewSwitchButton";
 import { IScreenShareState } from "@/types/peer.type";
 import RoomGradientBackground from "@/components/background/room/roomGradientBackground";
 import { useGetRoomData } from "@/apis/service/room.service";

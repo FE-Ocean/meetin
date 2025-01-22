@@ -1,6 +1,6 @@
 import React from "react";
 import style from "./login.module.scss";
-import LoginButton from "@/components/button/login/loginButton";
+import LoginButton from "@/components/buttons/login/loginButton";
 import { SOCIAL_LOGIN } from "@/constants/login.const";
 import Image from "next/image";
 import useModal from "@/components/modal/hooks/useModal";
