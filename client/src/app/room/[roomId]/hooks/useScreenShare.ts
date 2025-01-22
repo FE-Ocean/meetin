@@ -38,29 +38,29 @@ export const useScreenShare = (roomId: string) => {
         const newPeer = new Peer(myPeerId, {
             debug: 3,
         });
-        console.log("Peer created with ID:", newPeer.id);
+        console.log("피어 생성:", newPeer.id);
         peerRef.current = newPeer;
 
         // 피어 연결 해제 시 처리
         newPeer.on("disconnected", () => {
-            console.log("Peer disconnected");
+            console.log("피어 연결 해제");
         });
 
         // 피어 생성 후 에러 처리
         newPeer.on("error", (err) => {
-            console.error("Peer connection error:", err);
+            console.error("피어 연결 에러:", err);
             if (err.type === "unavailable-id") {
                 newPeer.destroy(); // 기존 피어 제거
                 const tempPeer = new Peer(setPeerId(user.userId + "-" + new Date().getTime())); // 새로운 피어 생성
                 peerRef.current = tempPeer;
-                console.log("Retrying with new Peer ID");
+                console.log("새로운 피어로 재시도 중...");
             }
         });
 
         // 컴포넌트가 언마운트될 때 피어 제거
         return () => {
             newPeer.destroy();
-            console.log("Peer destroyed on component unmount");
+            console.log("컴포넌트가 언마운트되어 피어 제거됨");
         };
     }, [setPeerId, user]); // 의존성 배열에서 peer 제거
 
@@ -70,7 +70,7 @@ export const useScreenShare = (roomId: string) => {
         const myPeerId = setPeerId(user.userId);
 
         peer.on("open", (id) => {
-            console.log("My peer ID is: " + id);
+            console.log("내 피어 아이디: " + id);
         });
 
         peer.on("connection", (connection) => {
@@ -170,13 +170,13 @@ export const useScreenShare = (roomId: string) => {
                 } else {
                     const call = peerRef.current.call(p.peerId, mediaStream);
                     if (!call) {
-                        console.error("Failed to establish call with user:", p);
+                        console.error("해당 사용자와의 콜 실패:", p);
                         return;
                     }
 
                     // 다른 피어의 스트림을 받았을 때
                     call.on("stream", (remoteStream) => {
-                        console.log("Received remote stream during call:", remoteStream);
+                        console.log("다른 사용자의 스트림 받음:", remoteStream);
                         if (peerData) {
                             peerData.stream = remoteStream;
                             updatePeers(p.peerId, peerData);
@@ -185,21 +185,21 @@ export const useScreenShare = (roomId: string) => {
 
                     // 콜이 끊겼을 때
                     call.on("close", () => {
-                        console.log("Call closed with user:", p);
+                        console.log("콜 종료:", p);
                         if (peerData) {
                             peerData.stream = undefined;
                             updatePeers(p.peerId, peerData);
                         }
                     });
                     call.on("error", (error) => {
-                        console.error("Call error with user:", p, error);
+                        console.error("콜 에러:", p, error);
                     });
 
                     const connection = peerRef.current.connect(p.peerId);
 
                     // 다른 피어와의 연결 생성 시
                     connection.on("open", () => {
-                        console.log("Data connection open with:", p.peerId);
+                        console.log("해당 피어와의 연결 생성:", p.peerId);
                         if (peerData) {
                             peerData.connection = connection;
                             updatePeers(p.peerId, peerData);
@@ -224,7 +224,7 @@ export const useScreenShare = (roomId: string) => {
                 }
             });
         } catch (error) {
-            console.error("Error starting screen share:", error);
+            console.error("화면 공유 에러:", error);
         }
     };
 
@@ -251,7 +251,7 @@ export const useScreenShare = (roomId: string) => {
                     try {
                         peerData.connection.send({ type: "stop-screen-share" });
                     } catch (err) {
-                        console.error("Error sending stop-screen-share message:", err);
+                        console.error("화면 공유 중단 메시지 전송 에러:", err);
                     }
                 }
 
@@ -263,7 +263,7 @@ export const useScreenShare = (roomId: string) => {
                         });
                         peerData.stream = undefined;
                     } catch (err) {
-                        console.error("Error stopping stream tracks:", err);
+                        console.error("스트림 트랙 중단 에러:", err);
                     }
                 }
 
@@ -272,7 +272,7 @@ export const useScreenShare = (roomId: string) => {
 
             setScreenShareState(IScreenShareState.NOT_SHARING);
         } catch (error) {
-            console.error("Error in stopScreenShare:", error);
+            console.error("화면 공유 중단 에러:", error);
         }
     };
 
