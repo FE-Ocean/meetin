@@ -89,21 +89,24 @@ export class MeetsInPhaserScene extends Phaser.Scene {
 
     create(): void {
         const map = this.make.tilemap({ key: "map" });
+        const { width: canvasWidth, height:canvasHeight } = this.sys.game.canvas;
+        const width = canvasWidth / 4 - map.width * 16 / 2;
+        const height = canvasHeight / 4 - map.height * 16 / 2;
         const tileBase = map.addTilesetImage("base", "base")!;
         const tileIndoor = map.addTilesetImage("indoor", "indoor")!;
         const tileUrban = map.addTilesetImage("urban", "urban")!;
 
-        map.createLayer("ground", [tileBase, tileUrban], 0, 0);
-        this.layerBlockOutdoor = map.createLayer("block-outdoor", [tileBase, tileUrban], 0, 0)!;
-        this.layerBlockWall = map.createLayer("block-wall", [tileBase, tileUrban], 0, 0)!;
+        map.createLayer("ground", [tileBase, tileUrban], width, height);
+        this.layerBlockOutdoor = map.createLayer("block-outdoor", [tileBase, tileUrban], width, height)!;
+        this.layerBlockWall = map.createLayer("block-wall", [tileBase, tileUrban], width, height)!;
         this.layerBlockFurniture = map.createLayer(
             "block-furniture",
             [tileBase, tileIndoor],
-            0,
-            0,
+            width,
+            height,
         )!;
-        map.createLayer("furniture", [tileBase, tileIndoor, tileUrban], 0, 0);
-        map.createLayer("top-decorations", [tileBase, tileUrban], 0, 0);
+        map.createLayer("furniture", [tileBase, tileIndoor, tileUrban], width, height);
+        map.createLayer("top-decorations", [tileBase, tileUrban], width, height);
 
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -345,7 +348,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
 
         const player = this.physics.add.sprite(playerInfo.x, playerInfo.y, spriteKey) as PlayerType;
         player.setCollideWorldBounds(true);
-        player.setOrigin(0, 0);
+        player.setOrigin(0.5, 0.5);
         player.setSize(16, 16);
 
         this.physics.add.collider(player, this.layerBlockOutdoor);
