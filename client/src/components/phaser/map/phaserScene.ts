@@ -61,7 +61,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
     private layerBlockWall!: Phaser.Tilemaps.TilemapLayer;
     private layerBlockFurniture!: Phaser.Tilemaps.TilemapLayer;
     private keyboardInput!: Phaser.Types.Input.Keyboard.CursorKeys;
-    private etcKeyboardInput: object | undefined
+    private etcKeyboardInput: object | undefined;
 
     constructor(roomId: string, user: IUser, socket: Socket) {
         super("MeetsInPhaserScene");
@@ -99,15 +99,20 @@ export class MeetsInPhaserScene extends Phaser.Scene {
 
     create(): void {
         const map = this.make.tilemap({ key: "map" });
-        const { width: canvasWidth, height:canvasHeight } = this.sys.game.canvas;
-        const width = canvasWidth / 4 - map.width * 16 / 2;
-        const height = canvasHeight / 4 - map.height * 16 / 2;
+        const { width: canvasWidth, height: canvasHeight } = this.sys.game.canvas;
+        const width = canvasWidth / 4 - (map.width * 16) / 2;
+        const height = canvasHeight / 4 - (map.height * 16) / 2;
         const tileBase = map.addTilesetImage("base", "base")!;
         const tileIndoor = map.addTilesetImage("indoor", "indoor")!;
         const tileUrban = map.addTilesetImage("urban", "urban")!;
 
         map.createLayer("ground", [tileBase, tileUrban], width, height);
-        this.layerBlockOutdoor = map.createLayer("block-outdoor", [tileBase, tileUrban], width, height)!;
+        this.layerBlockOutdoor = map.createLayer(
+            "block-outdoor",
+            [tileBase, tileUrban],
+            width,
+            height,
+        )!;
         this.layerBlockWall = map.createLayer("block-wall", [tileBase, tileUrban], width, height)!;
         this.layerBlockFurniture = map.createLayer(
             "block-furniture",
@@ -134,7 +139,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         this.setupAnimations();
 
         this.keyboardInput = this.input.keyboard!.createCursorKeys();
-        this.etcKeyboardInput = this.input.keyboard!.addKeys('W,A,S,D')
+        this.etcKeyboardInput = this.input.keyboard!.addKeys("W,A,S,D");
         this.input.keyboard!.disableGlobalCapture();
     }
 
@@ -303,9 +308,9 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             this.keyboardInput.right.isDown ||
             this.keyboardInput.up.isDown ||
             this.keyboardInput.down.isDown ||
-            this.etcKeyboardInput?.W.isDown || 
-            this.etcKeyboardInput?.A.isDown || 
-            this.etcKeyboardInput?.S.isDown || 
+            this.etcKeyboardInput?.W.isDown ||
+            this.etcKeyboardInput?.A.isDown ||
+            this.etcKeyboardInput?.S.isDown ||
             this.etcKeyboardInput?.D.isDown
         );
     }
@@ -315,10 +320,10 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             this.keyboardInput.left.isUp &&
             this.keyboardInput.right.isUp &&
             this.keyboardInput.up.isUp &&
-            this.keyboardInput.down.isUp && 
-            this.etcKeyboardInput?.W.isUp && 
-            this.etcKeyboardInput?.A.isUp && 
-            this.etcKeyboardInput?.S.isUp && 
+            this.keyboardInput.down.isUp &&
+            this.etcKeyboardInput?.W.isUp &&
+            this.etcKeyboardInput?.A.isUp &&
+            this.etcKeyboardInput?.S.isUp &&
             this.etcKeyboardInput?.D.isUp
         );
     }
