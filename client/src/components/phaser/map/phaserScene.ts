@@ -107,7 +107,10 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             height,
         )!;
         map.createLayer("furniture", [tileBase, tileIndoor, tileUrban], width, height);
+        const layerChairBack = map.createLayer("chair-back", [tileBase, tileIndoor], width, height);
         map.createLayer("top-decorations", [tileBase, tileUrban], width, height);
+
+        layerChairBack!.setDepth(2);
 
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -154,22 +157,15 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             const spriteKey = `player${i}`;
 
             this.anims.create({
-                key: `walk-right-${i}`,
-                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [3, 7, 11] }),
-                frameRate: 10,
-                repeat: -1,
-            });
-
-            this.anims.create({
-                key: `walk-down-${i}`,
-                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [1, 5, 9] }),
-                frameRate: 10,
-                repeat: -1,
-            });
-
-            this.anims.create({
                 key: `walk-left-${i}`,
                 frames: this.anims.generateFrameNumbers(spriteKey, { frames: [0, 4, 8] }),
+                frameRate: 10,
+                repeat: -1,
+            });
+
+            this.anims.create({
+                key: `walk-right-${i}`,
+                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [3, 7, 11] }),
                 frameRate: 10,
                 repeat: -1,
             });
@@ -182,7 +178,32 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             });
 
             this.anims.create({
-                key: `player_idle_${i}`,
+                key: `walk-down-${i}`,
+                frames: this.anims.generateFrameNumbers(spriteKey, { frames: [1, 5, 9] }),
+                frameRate: 10,
+                repeat: -1,
+            });
+
+            this.anims.create({
+                key: `idle-left-${i}`,
+                frames: [{ key: spriteKey, frame: 0 }],
+                frameRate: 1,
+            });
+
+            this.anims.create({
+                key: `idle-right-${i}`,
+                frames: [{ key: spriteKey, frame: 3 }],
+                frameRate: 1,
+            });
+
+            this.anims.create({
+                key: `idle-up-${i}`,
+                frames: [{ key: spriteKey, frame: 2 }],
+                frameRate: 1,
+            });
+
+            this.anims.create({
+                key: `idle-down-${i}`,
                 frames: [{ key: spriteKey, frame: 1 }],
                 frameRate: 1,
             });
@@ -237,8 +258,11 @@ export class MeetsInPhaserScene extends Phaser.Scene {
             }
             player.setVelocityY(PLAYER_SPEED * 16);
         } else {
-            if (player.anims.isPlaying) {
-                player.play(`player_idle_${this.myCharacterId}`);
+            const currentAnim = this.player.anims.currentAnim?.key.slice(5);
+            const newAnim = `idle-${currentAnim}`;
+
+            if (!this.player.anims.isPlaying || this.player.anims.currentAnim?.key !== newAnim) {
+                this.player.play(newAnim);
             }
         }
     }
@@ -346,8 +370,10 @@ export class MeetsInPhaserScene extends Phaser.Scene {
     }
 
     private animateOtherPlayerStop(otherPlayer: OtherPlayerType): void {
+        const stopAnim = otherPlayer.anims.currentAnim?.key.slice(5);
+
         if (otherPlayer.moving) {
-            otherPlayer.play(`player_idle_${otherPlayer.characterId}`);
+            otherPlayer.play(`idle-${stopAnim}`);
         }
         otherPlayer.moving = false;
     }
@@ -358,6 +384,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
 
         const player = this.physics.add.sprite(playerInfo.x, playerInfo.y, spriteKey) as PlayerType;
         player.setCollideWorldBounds(true);
+        player.anims.play(`idle-down-${this.myCharacterId}`);
         player.setOrigin(0, 0);
         player.setSize(16, 16);
 
@@ -390,7 +417,10 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         ) as OtherPlayerType;
 
         otherPlayer.setCollideWorldBounds(true);
+        otherPlayer.anims.play(`idle-down-${playerInfo.characterId}`);
+        otherPlayer.setOrigin(0, 0);
         otherPlayer.playerId = playerInfo.playerId;
+        otherPlayer.characterId = playerInfo.characterId;
         otherPlayer.nameTag = this.createNameTag(
             playerInfo.x + otherPlayer.width / 2,
             playerInfo.y - 15,
