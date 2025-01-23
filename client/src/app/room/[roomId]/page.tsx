@@ -8,18 +8,12 @@ import Chat from "@/components/chat/chat";
 import Menu from "@/components/menu/menu";
 import ScreenWindow from "@/components/screen/window/screenWindow";
 import Skeleton from "@/components/common/skeleton/skeleton";
-
-import { useParams } from "next/navigation";
 import useChatSocket from "@/app/room/[roomId]/hooks/useChatSocket";
 import { useScreenShare } from "./hooks/useScreenShare";
 import ViewSwitchButton from "@/components/buttons/viewSwitch/viewSwitchButton";
 import { IScreenShareState } from "@/types/peer.type";
-
 import RoomGradientBackground from "@/components/background/room/roomGradientBackground";
-import useChatSocket from "@/app/room/[roomId]/hooks/useChatSocket";
-import { useScreenShare } from "./hooks/useScreenShare";
 import { useGetRoomData } from "@/apis/service/room.service";
-import { IScreenShareState } from "@/types/peer.type";
 import style from "./style.module.scss";
 
 const PhaserMap = dynamic(() => import("../../../components/phaser/map/map"), {
