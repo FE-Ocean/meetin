@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useAtom } from "jotai";
 import { timerAtom } from "@/jotai/atom";
 
-const SECONDS_PER_MINUTE = 60;
-
 const useTimer = ({ timerEnd }: { timerEnd: () => void }) => {
+    const SECONDS_PER_MINUTE = 60;
     const [{ minute, second }] = useAtom(timerAtom);
 
     const totalSec = useRef(minute * SECONDS_PER_MINUTE + second);

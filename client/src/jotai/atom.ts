@@ -1,6 +1,6 @@
-import { IScreenShareState } from "@/types/peer.type";
-import { IUser } from "@/types/user.type";
 import { atom } from "jotai";
+import { IScreenShareState } from "@/types/peer.type";
+import { MIN_ZOOM_LEVEL } from "@/constants/zoomLevel.const";
 
 interface IModalAtom {
     [fileName: string]: {
@@ -29,3 +29,5 @@ export const screenShareStateAtom = atom<IScreenShareState>(IScreenShareState.NO
 export const roomIdAtom = atom("");
 
 export const isChatFocusedAtom = atom(false);
+
+export const zoomLevelAtom = atom(MIN_ZOOM_LEVEL);

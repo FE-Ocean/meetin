@@ -4,9 +4,9 @@ import useTimer from "./hooks/useTimer";
 import useStopTimer from "./hooks/useStopTimer";
 import { useCreatePushNotification } from "@/apis/service/notification.service";
 import { numberToString } from "@/utils";
+import { IRoomUser } from "@/types/chat.type";
 import timer_icon from "/public/icons/timer.svg";
 import style from "./timer.module.scss";
-import { IRoomUser } from "@/types/chat.type";
 
 interface ITimer {
     roomUsers: IRoomUser[];

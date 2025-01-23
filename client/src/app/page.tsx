@@ -2,24 +2,13 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/common/button/button";
 import useModal from "@/components/modal/hooks/useModal";
-import style from "./style.module.scss";
 import { LANDING_CONTENTS } from "@/constants/landing.const";
 import { motion, AnimatePresence } from "motion/react";
+import style from "./style.module.scss";
 
 const Home = () => {
     const { onOpen } = useModal("login");
 
-    useEffect(() => {
-        const registerServiceWorker = async () => {
-            if (!("serviceWorker" in navigator)) {
-                alert("이 브라우저는 서비스 워커 제공 X");
-                return;
-            }
-
-            await navigator.serviceWorker.register("/serviceWorker.js");
-        };
-        registerServiceWorker();
-    }, []);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const intervalRef = useRef<NodeJS.Timeout>();

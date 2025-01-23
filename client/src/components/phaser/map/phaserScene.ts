@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { Socket } from "socket.io-client";
 import { IUser } from "@/types/user.type";
+import { MIN_ZOOM_LEVEL } from "@/constants/zoomLevel.const";
 
 interface PlayerInfo {
     x: number;
@@ -50,6 +51,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
     private otherPlayers: Phaser.Physics.Arcade.Group | null;
     private myCharacterId: string | null;
     private isChatFocused: boolean;
+    private zoomLevel: number;
     private player!: Phaser.Physics.Arcade.Sprite & {
         nameTag?: Phaser.GameObjects.Text;
         moving?: boolean;
@@ -69,10 +71,17 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         this.otherPlayers = null;
         this.myCharacterId = null;
         this.isChatFocused = false;
+        this.zoomLevel = MIN_ZOOM_LEVEL;
     }
 
-    setIsChatFocused(value: boolean): void {
-        this.isChatFocused = value;
+    setIsChatFocused(isChatFocused: boolean): void {
+        this.isChatFocused = isChatFocused;
+    }
+
+    setZoomLevel(zoomLevel: number): void {
+        if (this.cameras.main) {
+            this.cameras.main.setZoom(zoomLevel);
+        }
     }
 
     preload(): void {
@@ -120,8 +129,10 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         this.layerBlockFurniture.setCollisionByExclusion([-1]);
 
         this.otherPlayers = this.physics.add.group();
+
         this.setupSocket();
         this.setupAnimations();
+
         this.keyboardInput = this.input.keyboard!.createCursorKeys();
         this.etcKeyboardInput = this.input.keyboard!.addKeys('W,A,S,D')
         this.input.keyboard!.disableGlobalCapture();
@@ -393,7 +404,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
         this.physics.add.collider(player, this.layerBlockFurniture);
 
         this.cameras.main.startFollow(player);
-        this.cameras.main.setZoom(2);
+        this.setZoomLevel(this.zoomLevel);
         this.cameras.main.setRoundPixels(true);
 
         player.nameTag = this.createNameTag(
