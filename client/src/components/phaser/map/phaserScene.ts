@@ -358,7 +358,7 @@ export class MeetsInPhaserScene extends Phaser.Scene {
 
         const player = this.physics.add.sprite(playerInfo.x, playerInfo.y, spriteKey) as PlayerType;
         player.setCollideWorldBounds(true);
-        player.setOrigin(0.5, 0.5);
+        player.setOrigin(0, 0);
         player.setSize(16, 16);
 
         this.physics.add.collider(player, this.layerBlockOutdoor);
